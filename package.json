@@ -1,0 +1,19 @@
+{
+  "name": "TukChat",
+  "version": "1.0.0",
+  "description": "Socket.io chat",
+  "main": "backend/server.js",
+  "author": "Arthur Gallina",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "moment": "^2.24.0",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  },
+  "scripts": {
+    "start": "nodemon server"
+  }
+}
