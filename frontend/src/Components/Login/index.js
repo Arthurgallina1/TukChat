@@ -37,7 +37,7 @@ export default function Login() {
 
     function handleMsgSubmit(e){
         e.preventDefault();
-        console.log(msg);
+        socket.emit('chatMessage', msg);
     }
     return (
         <>
