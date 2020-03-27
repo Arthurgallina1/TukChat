@@ -11,8 +11,27 @@ const io = socketio(server);
 app.use(express.static(path.join(__dirname, 'public')));
 //Client connection
 io.on('connection', socket => {
-    console.log(`New WS connection`);
+    socket.emit('message', 'Welcome to Chat');
+
+    //broadcast when a user connects
+    socket.broadcast.emit('message', 'User Joao has joined the chat');
+    socket.on('chatMsg', msg => console.log(msg))
+
+    socket.on('disconnect', () => {
+        //io.emit pra todos
+        io.emit('message', 'User Joao has left the chat');
+    })
+
+    //Listen chatmsgs
+    socket.on('chatMessage', (msg) => {
+        console.log(msg);
+    })
+
+
+
 })
+
+
 
 const PORT = 8000 || process.ENV.PORT;
 

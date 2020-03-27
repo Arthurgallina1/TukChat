@@ -9,17 +9,26 @@ export default function Main() {
 
     }
 
-    function handleClick(){
-        setCounter(counter+1);
-        socket.emit(counter);
-    }
+  
+
     useEffect(() => {
         
         function socketOn(){
             socket.on('connect', function(){
-                socket.emit('hello');
+                socket.emit('msg', 'can your hear me?');
             });
+
+            socket.on('message', message => {
+                console.log(message)
+            })
+
+
+            //broadcast when a user connects
+            socket.broadcost.emit() //broadcast emit pra todo mundo menos que esta
         }
+
+
+
         socketOn();
     }, [])
     return (
