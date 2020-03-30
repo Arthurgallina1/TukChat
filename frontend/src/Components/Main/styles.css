@@ -60,6 +60,17 @@ input {
 button {
     width: 25%;
 }
+span {
+    color: #8a1a9c;
+    margin-right: 8px;
+    font-size: 1.1rem;
+    margin-left: 10px;
+
+}
+small {
+    color: #555;
+
+}
 ul {
     padding: 0;
     list-style: none;

@@ -8,14 +8,26 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
+// const adminNamespace = io.of('/admin');
+
 //Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 //Client connection
+let connectionList = [];
+
+//default namespace
 io.on('connection', socket => {
-    socket.emit('message', 'Welcome to Chat');
+
+    socket.emit('message', ({id: 'Server', msg: 'Welcome to the chat'}));
+
+    socket.join('room', () => {
+        let rooms = Object.keys(socket.rooms)
+        console.log(rooms)
+    })
+    socket.to('room').emit('event', 'someroom')
     //broadcast when a user connects
     socket.on('loginMessage', (id) => {
-        console.log(id + ' logou')
+        connectionList.push(id)
         socket.broadcast.emit('userLogin', `${id}`);
     })
     
@@ -29,15 +41,7 @@ io.on('connection', socket => {
         console.log('user disconnected')
         io.emit('message', 'User Joao has left the chat');
     })
-
-    //Listen chatmsgs
-    socket.on('chatMessage', (msg) => {
-        io.emit('message', msg)
-    })
-
-
-
-
+    // console.log(connectionList)
 
 })
 

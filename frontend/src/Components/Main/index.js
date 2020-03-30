@@ -9,11 +9,16 @@ export default function Main() {
     const { id } = useParams();
     const [ usersOnline, setUsersOnline ] = useState([]);
     const [msg, setMsg] = useState('');
-    const [ chat, setChat ] = useState([{id: '', 'msg' : 'Welcome to the chat!'}]);
+    const [ chat, setChat ] = useState([]);
 
     useEffect(() => {
         socket.on('connect', function(){
+            // socket.join
             socket.emit('loginMessage', `${id}`);
+
+            socket.on('event', () => {
+                console.log('entrei na room ')
+            })
         });
 
        
@@ -24,7 +29,7 @@ export default function Main() {
 
     useEffect(() => {
         socket.on('message', ({msg, id}) => {
-            console.log(msg, id)
+            // console.log('msg recebida ' + msg )
             setChat([...chat, {msg, id}])
         })
 
@@ -39,8 +44,6 @@ export default function Main() {
     function handleSubmit(){
         socket.emit('message', ({id, msg}));
         setMsg('');
-        
-        console.log(chat)
     }
 
 
@@ -65,7 +68,7 @@ export default function Main() {
                         <div className="chat-box">
                             {
                                 chat.map(msg => (
-                                    <p key={`${msg.id}${msg.msg}`}>{`${msg.id}: ${msg.msg}`}</p>
+                                <p key={`${msg.id}${msg.msg}`}><span>{msg.id}</span><small>{msg.msg}</small></p>
                                 ))
                             }
 
@@ -75,7 +78,10 @@ export default function Main() {
                             <button onClick={() => handleSubmit()}>SEND</button>
                         </div>
                     </div>
-                    <div className="group-section">c</div>
+                    <div className="group-section">
+                        <p>ROOM</p>
+
+                    </div>
                 </div>
                 
             </div>
