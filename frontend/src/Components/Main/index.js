@@ -14,43 +14,49 @@ export default function Main() {
     useEffect(() => {
         socket.on("connect", function () {
             // socket.join
-            socket.emit("loginMessage", `${id}`);
+            socket.emit("newuser", `${id}`);
+
+            // socket.on("message", ({ msg, id }) => {
+            //     console.log("msg rcved" + msg);
+            //     setChat([...chat, { msg, id }]);
+            // });
 
             // socket.on("event", () => {
             //     console.log("entrei na room ");
             // });
-            socket.on("onlineList", (userlist) => {
-                setUsersOnline([userlist]);
-                console.debug("User List", userlist);
-            });
+            // socket.on("loginMessage", (userlist) => {
+            //     setUsersOnline([userlist]);
+            //     console.debug("User List", userlist);
+            // });
 
-            socket.on("userLogin", (user) => {
-                console.debug("userLogin", `user ${user} has logged`);
-                // setUsersOnline(...usersOnline, id);
-                setUsersOnline([...usersOnline, user]);
-            });
+            // socket.on("userLogin", (user) => {
+            //     console.debug("userLogin", `user ${user} has logged`);
+            //     // setUsersOnline(...usersOnline, id);
+            //     setUsersOnline([...usersOnline, user]);
+            // });
 
-            socket.on("message", ({ msg, id }) => {
-                setChat([...chat, { msg, id }]);
-            });
+            // socket.on("message", ({ msg, id }) => {
+            //     setChat([...chat, { msg, id }]);
+            // });
         });
 
         //broadcast when a user connects
         // socket.broadcast.emit() //broadcast emit pra todo mundo menos que esta
     }, []);
 
-    // useEffect(() => {
-    //     socket.on("message", ({ msg, id }) => {
-    //         // console.log('msg recebida ' + msg )
-    //         setChat([...chat, { msg, id }]);
-    //     });
-    // }, [chat]);
+    useEffect(() => {
+        socket.on("message", ({ msg, id }) => {
+            // console.log('msg recebida ' + msg )
+            setChat([...chat, { msg, id }]);
+        });
+    }, [chat]);
 
-    // useEffect(() => {
-    //     socket.on("userLogin", (user) => {
-    //         setUsersOnline([...usersOnline, user]);
-    //     });
-    // }, [usersOnline]);
+    useEffect(() => {
+        socket.on("user connected", (users) => {
+            // setUsersOnline([...usersOnline, user]);
+            setUsersOnline([users]);
+        });
+    }, [usersOnline]);
 
     function handleSubmit() {
         socket.emit("message", { id, msg });
