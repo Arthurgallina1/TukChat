@@ -6,15 +6,21 @@ import "./styles.css";
 const socket = openSocket("http://localhost:8000");
 
 export default function Main() {
-    const { id } = useParams();
+    const { id, room } = useParams();
+    console.log(id, room);
     const [usersOnline, setUsersOnline] = useState([]);
     const [msg, setMsg] = useState("");
+    const [activeRooms, setActiveRooms] = useState([]);
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
         socket.on("connect", function () {
             // socket.join
-            socket.emit("newuser", `${id}`);
+            let connectionObj = {
+                username: id,
+                room,
+            };
+            socket.emit("newuser", connectionObj);
         });
     }, []);
 
@@ -89,7 +95,10 @@ export default function Main() {
                         </div>
                     </div>
                     <div className='group-section'>
-                        <p>ROOM</p>
+                        <p>ROOMS</p>
+                        {activeRooms.map((room) => (
+                            <li key={room}>{room}</li>
+                        ))}
                     </div>
                 </div>
             </div>

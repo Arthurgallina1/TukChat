@@ -18,6 +18,7 @@ let users = [];
 
 io.on("connection", (socket) => {
     connections.push(socket.id);
+
     console.log(`${connections.length} Online ATM!!!`);
 
     //Disconnect
@@ -38,14 +39,24 @@ io.on("connection", (socket) => {
 
     // New User
     socket.on("newuser", (data) => {
-        socket.username = data;
-        users.push({ username: socket.username, id: socket.id });
+        let room = data.room;
+        console.log(data.username);
+        socket.username = data.username;
+        socket.room = room;
+        socket.join(room);
+        users.push({
+            username: socket.username,
+            id: socket.id,
+            room: socket.room,
+        });
         socket.emit("message", {
             username: "Server",
-            msg: "Welcome to the server",
+            msg:
+                "Welcome to the server! You're currently in room" + socket.room,
         });
-        io.emit("users", users);
-        console.log(users);
+        const getUsersInRoom = users.filter((user) => user.room === room);
+        io.to(room).emit("users", getUsersInRoom);
+        console.debug("User in room", getUsersInRoom);
     });
 });
 
