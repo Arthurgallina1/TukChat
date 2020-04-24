@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import openSocket from "socket.io-client";
 import { useParams } from "react-router-dom";
 import "./styles.css";
+import { Link } from "react-router-dom";
 
 const socket = openSocket("http://localhost:8000");
 
 export default function Main() {
     const { id, room } = useParams();
-    console.log(id, room);
     const [usersOnline, setUsersOnline] = useState([]);
     const [msg, setMsg] = useState("");
     const [activeRooms, setActiveRooms] = useState([]);
@@ -32,6 +32,13 @@ export default function Main() {
     }, [messages]);
 
     useEffect(() => {
+        socket.on("rooms", (rooms) => {
+            // console.log('msg recebida ' + msg )
+            setActiveRooms([...rooms]);
+        });
+    }, [messages]);
+
+    useEffect(() => {
         socket.on("users", (users) => {
             // setUsersOnline([...usersOnline, user]);
             setUsersOnline([...users]);
@@ -40,8 +47,18 @@ export default function Main() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        socket.emit("message", { id, msg });
+        socket.emit("message", { id, msg, room });
         setMsg("");
+    }
+    function handlePing(user) {
+        const socketid = user.id;
+        if (user.username !== id) {
+            socket.emit("poke", { socketid, id });
+        }
+    }
+
+    function changeRoom(room) {
+        console.log(room);
     }
 
     return (
@@ -52,7 +69,7 @@ export default function Main() {
                 <div className='chat-wrapper'>
                     <div className='online-section'>
                         <ul>
-                            <p>ONLINE NOW</p>
+                            <p>ONLINE NOW ({usersOnline.length})</p>
                             {/* <li>{id}</li> */}
                             {usersOnline.map((user) => {
                                 let currentUserStyle =
@@ -62,6 +79,7 @@ export default function Main() {
                                     <li
                                         key={user.id}
                                         className={currentUserStyle}
+                                        onClick={() => handlePing(user)}
                                     >
                                         {user.username}
                                     </li>
@@ -95,10 +113,23 @@ export default function Main() {
                         </div>
                     </div>
                     <div className='group-section'>
-                        <p>ROOMS</p>
-                        {activeRooms.map((room) => (
-                            <li key={room}>{room}</li>
-                        ))}
+                        <p>ROOMS {activeRooms.length}</p>
+                        <ul>
+                            {activeRooms.map((rm) => {
+                                let currentUserStyle =
+                                    rm === room ? "user" : "";
+                                return (
+                                    <Link to={`/dash/${rm}/${id}`}>
+                                        <li
+                                            key={rm}
+                                            className={currentUserStyle}
+                                        >
+                                            {rm}
+                                        </li>
+                                    </Link>
+                                );
+                            })}
+                        </ul>
                     </div>
                 </div>
             </div>

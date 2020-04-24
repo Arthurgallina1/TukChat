@@ -13,8 +13,8 @@ const io = socketio(server);
 app.use(express.static(path.join(__dirname, "public")));
 //Client connection
 let connections = [];
-let messages = [];
 let users = [];
+let rooms = [];
 
 io.on("connection", (socket) => {
     connections.push(socket.id);
@@ -32,15 +32,25 @@ io.on("connection", (socket) => {
     });
 
     //Receive and transmit
-    socket.on("message", (msg) => {
-        console.log(msg);
-        io.emit("message", msg);
+    socket.on("message", (data) => {
+        io.to(data.room).emit("message", data);
+    });
+
+    //Receive and transmit
+    socket.on("poke", (data) => {
+        const pokedUser = users.find((user) => user.id == data.socketid);
+        io.to(pokedUser.room).emit("message", {
+            id: "Server",
+            msg: `User ${data.id} has poked ${pokedUser.username}`,
+        });
     });
 
     // New User
     socket.on("newuser", (data) => {
         let room = data.room;
-        console.log(data.username);
+        if (!rooms.includes(room)) {
+            rooms.push(room);
+        }
         socket.username = data.username;
         socket.room = room;
         socket.join(room);
@@ -50,46 +60,20 @@ io.on("connection", (socket) => {
             room: socket.room,
         });
         socket.emit("message", {
-            username: "Server",
+            id: "Server",
             msg:
-                "Welcome to the server! You're currently in room" + socket.room,
+                "Welcome to the server! You're currently in room " +
+                socket.room,
         });
         const getUsersInRoom = users.filter((user) => user.room === room);
         io.to(room).emit("users", getUsersInRoom);
-        console.debug("User in room", getUsersInRoom);
+        io.emit("rooms", rooms);
+        io.emit("message", {
+            id: "Server",
+            msg: `User ${data.username} has joined room ${room}`,
+        });
     });
 });
-
-//default namespace
-// io.on("connection", (socket) => {
-//     socket.emit("message", { id: "Server", msg: "Welcome to the chat" });
-//     socket.emit("loginMessage", onlineList);
-//     socket.join("room", () => {
-//         let rooms = Object.keys(socket.rooms);
-//         // console.debug("Rooms", rooms);
-//     });
-//     socket.to("room").emit("event", "someroom");
-//     //broadcast when a user connects
-//     socket.on("loginMessage", (id) => {
-//         onlineList.push(id);
-//         console.debug("Logados: ", onlineList);
-//         // socket.broadcast.emit("onlineList", onlineList);
-//         socket.broadcast.emit("userLogin", `${id}`);
-//     });
-
-//     socket.on("message", ({ id, msg }) => {
-//         messages.push({ id, msg });
-//         console.log("received message: " + id + " : " + msg);
-//         io.emit("message", { id, msg });
-//     });
-
-//     socket.on("disconnect", () => {
-//         //io.emit pra todos
-//         console.log(`user ${socket.id} has disconnected`);
-//         io.emit("message", "User Joao has left the chat");
-//     });
-//     // console.log(onlineList)
-// });
 
 const PORT = 8000 || process.ENV.PORT;
 
