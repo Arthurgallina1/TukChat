@@ -1,12 +1,11 @@
 .main {
-    background: #666; 
+    background: #666;
     height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px 20px;
 }
-
 
 .chat-wrapper {
     width: 760px;
@@ -15,7 +14,6 @@
     border-radius: 5px;
     margin: 0 auto;
     display: flex;
-
 }
 
 .online-section {
@@ -31,16 +29,20 @@
     border-right: 2px solid #8a1a9c;
     display: flex;
     flex-flow: column wrap;
-
 }
-h3, h4 {
+li.user {
+    font-weight: bold;
+    color: gray;
+}
+h3,
+h4 {
     color: white;
 }
 .chat-box {
     border: 1px solid #8a1a9c;
     flex: 9;
 }
-.form-section  {
+.form-section {
     flex: 1;
 }
 
@@ -65,11 +67,9 @@ span {
     margin-right: 8px;
     font-size: 1.1rem;
     margin-left: 10px;
-
 }
 small {
     color: #555;
-
 }
 ul {
     padding: 0;

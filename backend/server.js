@@ -23,7 +23,11 @@ io.on("connection", (socket) => {
     //Disconnect
     socket.on("disconnect", () => {
         connections.splice(connections.indexOf(socket), 1);
-        console.log(`User ${socket.id} disconnected`);
+        users.splice(users.indexOf(socket.username), 1);
+        socket.broadcast.emit("users", users);
+        console.log(users);
+        // console.log(`Disconnect ${connections.length} Online ATM!!!`);
+        // console.log(users);
     });
 
     //Receive and transmit
@@ -35,8 +39,13 @@ io.on("connection", (socket) => {
     // New User
     socket.on("newuser", (data) => {
         socket.username = data;
-        users.push(socket.username);
-        socket.broadcast.emit("user connected", users);
+        users.push({ username: socket.username, id: socket.id });
+        socket.emit("message", {
+            username: "Server",
+            msg: "Welcome to the server",
+        });
+        io.emit("users", users);
+        console.log(users);
     });
 });
 

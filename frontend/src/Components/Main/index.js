@@ -9,56 +9,31 @@ export default function Main() {
     const { id } = useParams();
     const [usersOnline, setUsersOnline] = useState([]);
     const [msg, setMsg] = useState("");
-    const [chat, setChat] = useState([]);
+    const [messages, setMessages] = useState([]);
 
     useEffect(() => {
         socket.on("connect", function () {
             // socket.join
             socket.emit("newuser", `${id}`);
-
-            // socket.on("message", ({ msg, id }) => {
-            //     console.log("msg rcved" + msg);
-            //     setChat([...chat, { msg, id }]);
-            // });
-
-            // socket.on("event", () => {
-            //     console.log("entrei na room ");
-            // });
-            // socket.on("loginMessage", (userlist) => {
-            //     setUsersOnline([userlist]);
-            //     console.debug("User List", userlist);
-            // });
-
-            // socket.on("userLogin", (user) => {
-            //     console.debug("userLogin", `user ${user} has logged`);
-            //     // setUsersOnline(...usersOnline, id);
-            //     setUsersOnline([...usersOnline, user]);
-            // });
-
-            // socket.on("message", ({ msg, id }) => {
-            //     setChat([...chat, { msg, id }]);
-            // });
         });
-
-        //broadcast when a user connects
-        // socket.broadcast.emit() //broadcast emit pra todo mundo menos que esta
     }, []);
 
     useEffect(() => {
-        socket.on("message", ({ msg, id }) => {
+        socket.on("message", (msg) => {
             // console.log('msg recebida ' + msg )
-            setChat([...chat, { msg, id }]);
+            setMessages([...messages, msg]);
         });
-    }, [chat]);
+    }, [messages]);
 
     useEffect(() => {
-        socket.on("user connected", (users) => {
+        socket.on("users", (users) => {
             // setUsersOnline([...usersOnline, user]);
-            setUsersOnline([users]);
+            setUsersOnline([...users]);
         });
     }, [usersOnline]);
 
-    function handleSubmit() {
+    function handleSubmit(e) {
+        e.preventDefault();
         socket.emit("message", { id, msg });
         setMsg("");
     }
@@ -72,15 +47,25 @@ export default function Main() {
                     <div className='online-section'>
                         <ul>
                             <p>ONLINE NOW</p>
-                            <li>{id}</li>
-                            {usersOnline.map((user) => (
-                                <li key={user}>{user}</li>
-                            ))}
+                            {/* <li>{id}</li> */}
+                            {usersOnline.map((user) => {
+                                let currentUserStyle =
+                                    user.username === id ? "user" : "";
+
+                                return (
+                                    <li
+                                        key={user.id}
+                                        className={currentUserStyle}
+                                    >
+                                        {user.username}
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                     <div className='chat-section'>
                         <div className='chat-box'>
-                            {chat.map((msg) => {
+                            {messages.map((msg) => {
                                 return (
                                     <p key={`${msg.id}${msg.msg}`}>
                                         <span>{msg.id}</span>
@@ -94,8 +79,13 @@ export default function Main() {
                                 type='text'
                                 value={msg}
                                 onChange={(e) => setMsg(e.target.value)}
+                                onKeyPress={(e) =>
+                                    e.key === "Enter" ? handleSubmit(e) : null
+                                }
                             />
-                            <button onClick={() => handleSubmit()}>SEND</button>
+                            <button onClick={(e) => handleSubmit(e)}>
+                                SEND
+                            </button>
                         </div>
                     </div>
                     <div className='group-section'>
