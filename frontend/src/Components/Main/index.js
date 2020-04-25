@@ -39,6 +39,12 @@ export default function Main() {
     }, [messages]);
 
     useEffect(() => {
+        socket.on("private message", (msg) => {
+            setMessages([...messages, msg]);
+        });
+    }, [messages]);
+
+    useEffect(() => {
         socket.on("users", (users) => {
             // setUsersOnline([...usersOnline, user]);
             setUsersOnline([...users]);

@@ -38,10 +38,15 @@ io.on("connection", (socket) => {
 
     //Receive and transmit
     socket.on("poke", (data) => {
+        console.log(data);
         const pokedUser = users.find((user) => user.id == data.socketid);
-        io.to(pokedUser.room).emit("message", {
-            id: "Server",
-            msg: `User ${data.id} has poked ${pokedUser.username}`,
+        // io.to(pokedUser.room).emit("message", {
+        //     id: "Server",
+        //     msg: `User ${data.id} has poked ${pokedUser.username}`,
+        // });
+        io.to(data.socketid).emit("private message", {
+            id: "Private",
+            msg: `User ${data.id} has poked you`,
         });
     });
 
