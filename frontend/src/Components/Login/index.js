@@ -9,7 +9,7 @@ export default function Login() {
         <div className='login-page'>
             <div className='login-box'>
                 <h2>
-                    Socket <strong>Chat</strong>
+                    TSocket <strong>Chat</strong>
                 </h2>
                 {
                     <form>
@@ -26,7 +26,7 @@ export default function Login() {
                             placeholder='Room'
                         />
                         <Link to={`/dash/${room}/${name}`}>
-                            <button>Join</button>
+                            <button className='join'>Join</button>
                         </Link>
                     </form>
                 }

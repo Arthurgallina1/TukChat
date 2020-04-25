@@ -6,7 +6,9 @@ import closeIcon from "../../Assets/closeIcon.png";
 export default function InfoBar({ room }) {
     return (
         <div className='infoBar'>
-            <div className='leftInnerContainer'></div>
+            <div className='leftInnerContainer'>
+                TSocket <strong> Chat </strong>
+            </div>
             <div className='rightInnerContainer'>
                 <a href='/'>
                     <img src={closeIcon} alt='close icon' />
