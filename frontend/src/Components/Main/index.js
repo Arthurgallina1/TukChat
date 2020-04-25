@@ -3,8 +3,9 @@ import openSocket from "socket.io-client";
 import { useParams } from "react-router-dom";
 import "./styles.css";
 import { Link } from "react-router-dom";
-import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
+import ScrollToBottom from "react-scroll-to-bottom";
+import MessageBox from "../MessageBox";
 
 const socket = openSocket("http://localhost:8000");
 
@@ -72,7 +73,7 @@ export default function Main() {
     return (
         <div>
             <div className='main'>
-                <h2>
+                <h2 className='title'>
                     Socket <strong>Chat</strong>
                 </h2>
                 <div className='chat-wrapper'>
@@ -124,18 +125,9 @@ export default function Main() {
                         </div>
                     </div>
                     <div className='chat-section'>
-                        <PerfectScrollbar>
-                            <div className='chat-box'>
-                                {messages.map((msg) => {
-                                    return (
-                                        <p key={`${msg.id}${msg.msg}`}>
-                                            <span>{msg.id}</span>
-                                            <small>{msg.msg}</small>
-                                        </p>
-                                    );
-                                })}
-                            </div>
-                        </PerfectScrollbar>
+                        <ScrollToBottom className='chat-box'>
+                            <MessageBox messages={messages} />
+                        </ScrollToBottom>
 
                         <div className='form-section'>
                             <input
