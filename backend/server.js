@@ -8,7 +8,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-const PORT = 8000 || process.ENV.PORT;
+const PORT = process.ENV.PORT || 8000;
 const router = express.Router();
 
 router.get("/", (req, res) => {
