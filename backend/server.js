@@ -16,6 +16,7 @@ router.get("/", (req, res) => {
 //Set static folder
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(router);
 app.use(cors());
 //Client connection
 let connections = [];
