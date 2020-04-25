@@ -3,6 +3,8 @@ import openSocket from "socket.io-client";
 import { useParams } from "react-router-dom";
 import "./styles.css";
 import { Link } from "react-router-dom";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-perfect-scrollbar/dist/css/styles.css";
 
 const socket = openSocket("http://localhost:8000");
 
@@ -73,42 +75,68 @@ export default function Main() {
                 <h2>
                     Socket <strong>Chat</strong>
                 </h2>
-                <h4>Welcome, {id}!</h4>
                 <div className='chat-wrapper'>
-                    <div className='online-section'>
-                        <ul>
-                            <p>
-                                ONLINE <strong>NOW</strong> (
-                                {usersOnline.length})
-                            </p>
-                            {/* <li>{id}</li> */}
-                            {usersOnline.map((user) => {
-                                let currentUserStyle =
-                                    user.username === id ? "user" : "";
+                    <div className='left-side'>
+                        <div className='online-section'>
+                            <ul>
+                                <p>
+                                    ONLINE <strong>NOW</strong> (
+                                    {usersOnline.length})
+                                </p>
+                                {/* <li>{id}</li> */}
+                                {usersOnline.map((user) => {
+                                    let currentUserStyle =
+                                        user.username === id ? "user" : "";
 
-                                return (
-                                    <li
-                                        key={user.id}
-                                        className={currentUserStyle}
-                                        onClick={() => handlePing(user)}
-                                    >
-                                        {user.username}
-                                    </li>
-                                );
-                            })}
-                        </ul>
+                                    return (
+                                        <li
+                                            key={user.id}
+                                            className={currentUserStyle}
+                                            onClick={() => handlePing(user)}
+                                        >
+                                            {user.username}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                        <div className='group-section'>
+                            <p>
+                                ROOMS
+                                <br /> <strong>AVAILABLE</strong>
+                            </p>
+                            <ul>
+                                {activeRooms.map((rm) => {
+                                    let currentUserStyle =
+                                        rm === room ? "user" : "";
+                                    return (
+                                        <Link to={`/dash/${rm}/${id}`}>
+                                            <li
+                                                key={rm}
+                                                className={currentUserStyle}
+                                            >
+                                                {rm}
+                                            </li>
+                                        </Link>
+                                    );
+                                })}
+                            </ul>
+                        </div>
                     </div>
                     <div className='chat-section'>
-                        <div className='chat-box'>
-                            {messages.map((msg) => {
-                                return (
-                                    <p key={`${msg.id}${msg.msg}`}>
-                                        <span>{msg.id}</span>
-                                        <small>{msg.msg}</small>
-                                    </p>
-                                );
-                            })}
-                        </div>
+                        <PerfectScrollbar>
+                            <div className='chat-box'>
+                                {messages.map((msg) => {
+                                    return (
+                                        <p key={`${msg.id}${msg.msg}`}>
+                                            <span>{msg.id}</span>
+                                            <small>{msg.msg}</small>
+                                        </p>
+                                    );
+                                })}
+                            </div>
+                        </PerfectScrollbar>
+
                         <div className='form-section'>
                             <input
                                 type='text'
@@ -122,28 +150,6 @@ export default function Main() {
                                 SEND
                             </button>
                         </div>
-                    </div>
-                    <div className='group-section'>
-                        <p>
-                            ROOMS <strong>AVAILABLE</strong> (
-                            {activeRooms.length})
-                        </p>
-                        <ul>
-                            {activeRooms.map((rm) => {
-                                let currentUserStyle =
-                                    rm === room ? "user" : "";
-                                return (
-                                    <Link to={`/dash/${rm}/${id}`}>
-                                        <li
-                                            key={rm}
-                                            className={currentUserStyle}
-                                        >
-                                            {rm}
-                                        </li>
-                                    </Link>
-                                );
-                            })}
-                        </ul>
                     </div>
                 </div>
             </div>
