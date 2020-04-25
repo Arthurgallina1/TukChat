@@ -6,7 +6,7 @@ import MessageBox from "../MessageBox";
 import Input from "../Input";
 import InfoBar from "../InfoBar";
 import Sidebar from "../SideBar";
-const socket = openSocket("http://tu-socket-chat.herokuapp.com");
+const socket = openSocket("https://tu-socket-chat.herokuapp.com");
 
 export default function Chat() {
     const { id, room } = useParams();
