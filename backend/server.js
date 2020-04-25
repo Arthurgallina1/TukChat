@@ -7,14 +7,15 @@ const cors = require("cors");
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-const router = express.Router();
+
 const PORT = 8000 || process.ENV.PORT;
+const router = express.Router();
 
 router.get("/", (req, res) => {
     res.send("Server running on " + PORT).status(200);
 });
 //Set static folder
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
 app.use(router);
 app.use(cors());
@@ -81,4 +82,4 @@ io.on("connection", (socket) => {
     });
 });
 
-server.listen(PORT, () => console.log(`Server on ${PORT}`));
+server.listen(PORT, () => console.log(`Server on ${PORT} !`));
