@@ -10,16 +10,12 @@
     border-right: #8a1a9c 2px solid;
     height: 80%;
 }
-.online-list {
-    padding: 5px 15px;
-}
+
 ul {
     padding: 0;
     list-style: none;
 }
-strong {
-    color: #8a1a9c;
-}
+
 .container {
     display: flex;
     flex-direction: column;

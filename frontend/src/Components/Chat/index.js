@@ -59,7 +59,7 @@ export default function Chat() {
         socket.emit("message", { id, msg, room });
         setMsg("");
     };
-    function handlePing(user) {
+    function handlePoke(user) {
         const socketid = user.id;
         if (user.username !== id) {
             socket.emit("poke", { socketid, id });
@@ -77,11 +77,13 @@ export default function Chat() {
                 <Sidebar
                     id={id}
                     usersOnline={usersOnline}
-                    handlePing={handlePing}
+                    handlePoke={handlePoke}
+                    room={room}
+                    activeRooms={activeRooms}
                 />
                 <div className='container'>
                     <InfoBar room={room} />
-                    <MessageBox messages={messages} />
+                    <MessageBox messages={messages} handlePoke={handlePoke} />
                     <Input
                         message={msg}
                         setMessage={setMsg}

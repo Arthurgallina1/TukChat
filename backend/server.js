@@ -26,9 +26,6 @@ io.on("connection", (socket) => {
         connections.splice(connections.indexOf(socket), 1);
         users.splice(users.indexOf(socket.username), 1);
         socket.broadcast.emit("users", users);
-        console.log(users);
-        // console.log(`Disconnect ${connections.length} Online ATM!!!`);
-        // console.log(users);
     });
 
     //Receive and transmit
@@ -36,14 +33,13 @@ io.on("connection", (socket) => {
         io.to(data.room).emit("message", data);
     });
 
-    //Receive and transmit
+    //Receive and transmit pokes
     socket.on("poke", (data) => {
-        console.log(data);
         const pokedUser = users.find((user) => user.id == data.socketid);
-        // io.to(pokedUser.room).emit("message", {
-        //     id: "Server",
-        //     msg: `User ${data.id} has poked ${pokedUser.username}`,
-        // });
+        socket.emit("private message", {
+            id: "Private",
+            msg: `You have poked ${pokedUser.username}`,
+        });
         io.to(data.socketid).emit("private message", {
             id: "Private",
             msg: `User ${data.id} has poked you`,
@@ -66,14 +62,12 @@ io.on("connection", (socket) => {
         });
         socket.emit("message", {
             id: "Server",
-            msg:
-                "Welcome to the server! You're currently in room " +
-                socket.room,
+            msg: `Welcome to the server! You're currently in room ${socket.room}, you can poke other users clicking on theirs names.`,
         });
         const getUsersInRoom = users.filter((user) => user.room === room);
         io.to(room).emit("users", getUsersInRoom);
         io.emit("rooms", rooms);
-        io.emit("message", {
+        socket.to(room).emit("message", {
             id: "Server",
             msg: `User ${data.username} has joined room ${room}`,
         });

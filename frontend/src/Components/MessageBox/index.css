@@ -3,3 +3,16 @@
     overflow: auto;
     flex: auto;
 }
+
+p {
+    margin: 0;
+    padding: 2px 0;
+}
+.messages span {
+    color: #8a1a9c;
+    font-weight: 500;
+}
+.messages small {
+    margin-left: 5px;
+    color: #333;
+}

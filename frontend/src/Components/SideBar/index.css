@@ -1,0 +1,23 @@
+.info-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+.online-list {
+    padding: 5px 15px;
+    max-height: 200px;
+}
+
+.rooms-available {
+    padding: 5px 15px;
+}
+strong.roxo {
+    color: #8a1a9c;
+}
+
+li.user {
+    font-weight: bold;
+    color: #8a1a9c;
+    font-weight: 900;
+}
