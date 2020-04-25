@@ -70,12 +70,17 @@ export default function Main() {
     return (
         <div>
             <div className='main'>
-                <h3>SocketChat</h3>
+                <h2>
+                    Socket <strong>Chat</strong>
+                </h2>
                 <h4>Welcome, {id}!</h4>
                 <div className='chat-wrapper'>
                     <div className='online-section'>
                         <ul>
-                            <p>ONLINE NOW ({usersOnline.length})</p>
+                            <p>
+                                ONLINE <strong>NOW</strong> (
+                                {usersOnline.length})
+                            </p>
                             {/* <li>{id}</li> */}
                             {usersOnline.map((user) => {
                                 let currentUserStyle =
@@ -119,7 +124,10 @@ export default function Main() {
                         </div>
                     </div>
                     <div className='group-section'>
-                        <p>ROOMS {activeRooms.length}</p>
+                        <p>
+                            ROOMS <strong>AVAILABLE</strong> (
+                            {activeRooms.length})
+                        </p>
                         <ul>
                             {activeRooms.map((rm) => {
                                 let currentUserStyle =
