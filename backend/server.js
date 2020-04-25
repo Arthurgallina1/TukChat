@@ -2,6 +2,7 @@ const express = require("express");
 const http = require("http");
 const path = require("path");
 const socketio = require("socket.io");
+const cors = require("cors");
 
 const app = express();
 const server = http.createServer(app);
@@ -11,6 +12,8 @@ const io = socketio(server);
 
 //Set static folder
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(cors());
 //Client connection
 let connections = [];
 let users = [];
